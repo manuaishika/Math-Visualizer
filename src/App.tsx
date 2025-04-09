@@ -1,109 +1,166 @@
 import React, { useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Box, TextField, Button, Typography, Paper } from '@mui/material';
-import Sidebar from './components/Sidebar';
-import FunctionPlot from './components/FunctionPlot';
+import {
+  Container,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Chip,
+  CircularProgress
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import CodeIcon from '@mui/icons-material/Code';
 
 const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#90caf9',
+      main: '#00ff88',
     },
     secondary: {
-      main: '#f48fb1',
+      main: '#00b8d4',
     },
     background: {
-      default: '#121212',
-      paper: '#1e1e1e',
+      default: '#0a1929',
+      paper: '#132f4c',
     },
   },
 });
 
-function App() {
-  const [expression, setExpression] = useState('');
-  const [error, setError] = useState('');
-  const [selectedType, setSelectedType] = useState('2d-function');
-  const [xRange, setXRange] = useState([-10, 10]);
-  const [yRange, setYRange] = useState([-10, 10]);
+interface MCP {
+  id: string;
+  name: string;
+  description: string;
+  tags: string[];
+  url: string;
+}
 
-  const handleVisualize = () => {
-    try {
-      // TODO: Add validation for different visualization types
-      setError('');
-    } catch (err) {
-      setError('Invalid mathematical expression');
-    }
+const sampleMCP: MCP = {
+  id: '1',
+  name: 'Tool Finder MCP',
+  description: 'An intelligent system that helps LLMs find and utilize the most relevant tools and MCPs for any given task.',
+  tags: ['LLM', 'Tool Discovery', 'Automation', 'AI'],
+  url: 'https://github.com/example/tool-finder-mcp'
+};
+
+function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState<MCP[]>([]);
+
+  const handleSearch = async () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setResults([sampleMCP]);
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex' }}>
-        <Sidebar
-          selectedType={selectedType}
-          onSelectType={setSelectedType}
-        />
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            p: 3,
-            width: { sm: `calc(100% - 240px)` },
-          }}
-        >
-          <Container maxWidth="lg">
-            <Box sx={{ my: 4 }}>
-              <Typography variant="h3" component="h1" gutterBottom align="center">
-                Math Visualizer
-              </Typography>
-              
-              <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-                <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Enter mathematical expression"
-                    variant="outlined"
-                    value={expression}
-                    onChange={(e) => setExpression(e.target.value)}
-                    error={!!error}
-                    helperText={error}
-                  />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleVisualize}
-                    sx={{ minWidth: '120px' }}
-                  >
-                    Visualize
-                  </Button>
-                </Box>
-              </Paper>
-
-              {selectedType === '2d-function' && (
-                <FunctionPlot
-                  expression={expression}
-                  xMin={xRange[0]}
-                  xMax={xRange[1]}
-                  yMin={yRange[0]}
-                  yMax={yRange[1]}
-                  onXRangeChange={(min, max) => setXRange([min, max])}
-                  onYRangeChange={(min, max) => setYRange([min, max])}
-                />
-              )}
-
-              {selectedType !== '2d-function' && (
-                <Paper elevation={3} sx={{ p: 3, height: '400px' }}>
-                  <Typography variant="body1" align="center" sx={{ mt: 4 }}>
-                    {`${selectedType} visualization coming soon!`}
-                  </Typography>
-                </Paper>
-              )}
+      <Container maxWidth="lg">
+        <Box sx={{ my: 4 }}>
+          <Typography variant="h3" component="h1" gutterBottom align="center" sx={{ 
+            color: 'primary.main',
+            fontWeight: 'bold',
+            mb: 4
+          }}>
+            MCP Search Engine
+          </Typography>
+          
+          <Paper elevation={3} sx={{ p: 3, mb: 3, backgroundColor: 'background.paper' }}>
+            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+              <TextField
+                fullWidth
+                label="Search for MCPs"
+                variant="outlined"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'primary.main',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'primary.light',
+                    },
+                  },
+                }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSearch}
+                startIcon={<SearchIcon />}
+                sx={{ minWidth: '120px' }}
+              >
+                Search
+              </Button>
             </Box>
-          </Container>
+          </Paper>
+
+          {isLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+              <CircularProgress color="primary" />
+            </Box>
+          ) : results.length > 0 ? (
+            <Grid container spacing={3}>
+              {results.map((mcp) => (
+                <Grid item xs={12} key={mcp.id}>
+                  <Card sx={{ backgroundColor: 'background.paper' }}>
+                    <CardContent>
+                      <Typography variant="h5" component="h2" gutterBottom color="primary">
+                        {mcp.name}
+                      </Typography>
+                      <Typography variant="body1" paragraph>
+                        {mcp.description}
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        {mcp.tags.map((tag) => (
+                          <Chip
+                            key={tag}
+                            label={tag}
+                            color="primary"
+                            variant="outlined"
+                            size="small"
+                          />
+                        ))}
+                      </Box>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        size="small"
+                        color="primary"
+                        startIcon={<CodeIcon />}
+                        href={mcp.url}
+                        target="_blank"
+                      >
+                        View MCP
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Paper elevation={3} sx={{ p: 3, textAlign: 'center' }}>
+              <Typography variant="body1" color="text.secondary">
+                Enter a search query to find relevant MCPs
+              </Typography>
+            </Paper>
+          )}
         </Box>
-      </Box>
+      </Container>
     </ThemeProvider>
   );
 }

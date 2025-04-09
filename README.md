@@ -1,4 +1,15 @@
+# MCP Search Engine
 
+A powerful search engine designed to help LLMs find and utilize the most relevant Model Control Programs (MCPs) and tools across the internet.
+
+## Features
+
+- Intelligent MCP discovery
+- Real-time search capabilities
+- Detailed MCP information display
+- Tag-based categorization
+- Modern, responsive UI
+- Dark mode interface
 
 ## Getting Started
 
@@ -16,14 +27,26 @@ npm start
 
 ## Usage
 
-1. Enter a mathematical expression in the input field
-2. Select the type of visualization you want to see
-3. The application will generate an interactive visualization of your mathematical problem
+1. Enter your search query in the search bar
+2. Click "Search" or press Enter
+3. View the relevant MCPs and their details
+4. Click "View MCP" to access the full MCP documentation
 
 ## Technologies Used
 
 - React
 - TypeScript
-- Math.js
-- Function Plot
 - Material-UI
+- Axios (for API calls)
+- React Router
+
+## Project Structure
+
+- `src/App.tsx` - Main application component
+- `src/components/` - Reusable UI components
+- `src/services/` - API and data services
+- `src/types/` - TypeScript type definitions
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
