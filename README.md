@@ -1,13 +1,4 @@
-# Math Visualizer
 
-An interactive web application that helps visualize mathematical concepts and problems through dynamic graphs and visual representations.
-
-## Features
-
-- Input mathematical expressions and see them visualized
-- Support for various types of mathematical functions
-- Interactive graphs and visualizations
-- Modern and intuitive user interface
 
 ## Getting Started
 
